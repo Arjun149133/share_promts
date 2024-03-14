@@ -3,13 +3,15 @@
 import Profile from "@components/Profile";
 import { useSession } from "next-auth/react";
 
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const Page = () => {
   const { data: session } = useSession();
   const router = useRouter();
   const [posts, setPosts] = useState([]);
+  const searchParams = useSearchParams();
+  const userId = searchParams.get("id");
 
   const handleEdit = (post) => {
     router.push(`/update-prompt?id=${post._id}`);
@@ -37,20 +39,22 @@ const Page = () => {
     // Fetch prompts
     const fetchPosts = async () => {
       try {
-        const res = await fetch(`/api/users/${session?.user.id}/posts`);
+        const res = await fetch(`/api/users/${userId}/posts`);
         const data = await res.json();
         setPosts(data);
       } catch (error) {
         console.error(error);
       }
     };
-    if (session?.user.id) fetchPosts();
-  }, [session?.user.id]);
+    if (userId) fetchPosts();
+  }, [userId]);
   return (
     <>
       <Profile
-        name="My"
-        desc="Welcome to your personalized profile page"
+        name={posts[0]?.creator.username || session?.user?.name}
+        desc={`Welcome to ${
+          posts[0]?.creator.username || session?.user?.name
+        } profile page`}
         data={posts}
         handleEdit={handleEdit}
         handleDelete={handleDelete}
