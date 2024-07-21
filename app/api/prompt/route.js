@@ -1,6 +1,8 @@
 import Prompt from "@models/prompt";
 import { connectToDatabase } from "@utils/dabase";
 
+export const revalidate = 0;
+
 export const GET = async (req) => {
   try {
     await connectToDatabase();

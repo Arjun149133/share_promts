@@ -79,7 +79,7 @@ const Nav = () => {
               <div className="dropdown">
                 <Link
                   onClick={() => setToggleDropdown(false)}
-                  href="/profile"
+                  href={`/profile?id=${session?.user.id}`}
                   className="dropdown_link"
                 >
                   My Profile
